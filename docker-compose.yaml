@@ -8,8 +8,12 @@ networks:
   stack:
     name: stack
     external: false
+  traefik-public:
+    name: traefik-public
+    external: true
 
 services:
+
   database:
     container_name: database
     image: postgres
@@ -22,6 +26,14 @@ services:
 
   calcom:
     image: calcom.docker.scarf.sh/calcom/cal.com
+    labels:
+      exclude.from.frappe.backup: true
+      traefik.docker.network: traefik-public
+      traefik.enable: "true"
+      traefik.http.routers.calcom-http.entrypoints: http
+      traefik.http.routers.calcom-http.rule: Host(`calcom.<>`)
+      traefik.http.routers.calcom-http.service: calcom
+      traefik.http.services.calcom.loadbalancer.server.port: "80"
     build:
       context: .
       dockerfile: Dockerfile
@@ -38,6 +50,7 @@ services:
     restart: always
     networks:
       - stack
+      - traefik-public
     ports:
       - 3000:3000
     env_file: .env
