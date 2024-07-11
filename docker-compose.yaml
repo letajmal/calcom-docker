@@ -33,7 +33,7 @@ services:
       traefik.http.routers.calcom-http.entrypoints: http
       traefik.http.routers.calcom-http.rule: Host(`calcom.<>`)
       traefik.http.routers.calcom-http.service: calcom
-      traefik.http.services.calcom.loadbalancer.server.port: "80"
+      traefik.http.services.calcom.loadbalancer.server.port: "3000"
     build:
       context: .
       dockerfile: Dockerfile
@@ -51,8 +51,8 @@ services:
     networks:
       - stack
       - traefik-public
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
@@ -66,8 +66,8 @@ services:
     restart: always
     networks:
       - stack
-    ports:
-      - 5555:5555
+    # ports:
+    #   - 5555:5555
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
